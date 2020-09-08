@@ -2,11 +2,15 @@ package cat.tecnocampus.tinder.persistence;
 
 import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
 import cat.tecnocampus.tinder.domain.Profile;
+import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
+import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
+import org.simpleflatmapper.jdbc.spring.RowMapperImpl;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -16,6 +20,11 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	private final String queryProfileLazy = "select email, nickname, gender, attraction, passion from tinder_user where email = ?";
 	private final String queryProfilesLazy = "select email, nickname, gender, attraction, passion from tinder_user";
+
+	private final String queryProfile = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
+			"p.target as candidates_target, p.matched as candidates_matched from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
+	private final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
+			"p.target as candidates_target, p.matched as candidates_matched from tinder_user u left join proposal p on u.email = p.origin";
 
 	private RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
 		Profile profile = new Profile();
@@ -29,11 +38,23 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 		return profile;
 	};
 
+	ResultSetExtractorImpl<Profile> profilesRowMapper =
+			JdbcTemplateMapperFactory
+					.newInstance()
+					.addKeys("email")
+					.newResultSetExtractor(Profile.class);
+
+	RowMapperImpl<Profile> profileRowMapper =
+			JdbcTemplateMapperFactory
+					.newInstance()
+					.addKeys("email")
+					.newRowMapper(Profile.class);
 
 	public ProfileDAO(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
+	@Override
 	public Profile getProfileLazy(String email) {
 		try {
 			return jdbcTemplate.queryForObject(queryProfileLazy, new Object[]{email}, profileRowMapperLazy);
@@ -42,8 +63,37 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 		}
 	}
 
+	@Override
 	public List<Profile> getProfilesLazy() {
 		return jdbcTemplate.query(queryProfilesLazy, profileRowMapperLazy);
+	}
+
+	@Override
+	public Profile getProfile(String email) {
+		Profile result;
+		try {
+			result = jdbcTemplate.queryForObject(queryProfile, new Object[]{email}, profileRowMapper);
+			cleanEmptyProposals(result);
+			return result;
+		} catch (EmptyResultDataAccessException e) {
+			throw new ProfileNotFound(email);
+		}
+	}
+
+	@Override
+	public List<Profile> getProfiles() {
+		List<Profile> result;
+		result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
+		result.stream().forEach(this::cleanEmptyProposals);
+		return result;
+	}
+
+	//Avoid list of candidates with an invalid candidate when the profile hasn't any
+	private void cleanEmptyProposals(Profile profile) {
+		boolean hasNullCandidates = profile.getCandidates().stream().anyMatch(c -> c.getTarget() == null);
+		if (hasNullCandidates) {
+			profile.setCandidates(new ArrayList<>());
+		}
 	}
 
 }

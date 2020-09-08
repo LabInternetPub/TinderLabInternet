@@ -18,7 +18,7 @@ public class Profile {
 	private Gender attraction;
 	private Passion passion;
 
-	private List<Profile> candidates = new ArrayList<>();
+	private List<Proposal> candidates = new ArrayList<>();
 
 	public Profile() {
 
@@ -48,8 +48,8 @@ public class Profile {
 		return passion;
 	}
 
-	public List<Profile> getCandidates() {
-		return this.candidates;
+	public List<Proposal> getCandidates() {
+		return candidates;
 	}
 
 	public void setEmail(String email) {
@@ -76,23 +76,8 @@ public class Profile {
 		this.passion = passion;
 	}
 
-	public boolean addCandidate(Profile candidate) throws InvalidParameterException {
-
-		checkNotRepeatedCandidate(candidate);
-
-		this.candidates.add(candidate);
-
-		return candidate.hasLiked(this);
-	}
-
-	private void checkNotRepeatedCandidate(Profile candidate) throws InvalidParameterException {
-		if (hasLiked(candidate)) {
-			throw new InvalidParameterException();
-		}
-	}
-
-	private boolean hasLiked(Profile candidate) {
-		return this.candidates.contains(candidate);
+	public void setCandidates(List<Proposal> proposals) {
+		this.candidates = proposals;
 	}
 
 	public boolean getCompatibility(Profile user) {

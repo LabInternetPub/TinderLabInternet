@@ -8,4 +8,8 @@ public interface ProfileDAO {
 
     Profile getProfileLazy(String email);
     List<Profile> getProfilesLazy();
+
+    Profile getProfile(String email);
+    List<Profile> getProfiles();
+
 }

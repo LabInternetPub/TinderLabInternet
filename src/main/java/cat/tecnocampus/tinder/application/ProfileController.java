@@ -21,5 +21,12 @@ public class ProfileController {
 		return profileDAO.getProfilesLazy();
 	}
 
+	public Profile getFullProfile(String email) {
+		return profileDAO.getProfile(email);
+	}
+
+	public List<Profile> getFullProfiles() {
+		return profileDAO.getProfiles();
+	}
 
 }

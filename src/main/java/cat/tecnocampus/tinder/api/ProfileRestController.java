@@ -27,4 +27,14 @@ public class ProfileRestController {
 		return profileController.getProfilesLazy();
 	}
 
+	@GetMapping("/fullProfiles/{email}")
+	public Profile getFullProfile(@PathVariable String email) throws Exception {
+		Profile user = profileController.getFullProfile(email);
+		return user;
+	}
+
+	@GetMapping("/fullProfiles")
+	public List<Profile> getfullProfiles() {
+		return profileController.getFullProfiles();
+	}
 }
