@@ -77,7 +77,9 @@ public class Profile {
 		this.likes = proposals;
 	}
 
-	private boolean isCompatible(Profile user) {
+	public boolean isCompatible(Profile user) {
+		if (user.getEmail().equals(this.email)) //to avoid narcicists
+			return false;
 		return (user.getGender() == this.getAtraction() || this.attraction == Gender.Bisexual) && user.getPassion() == this.passion;
 	}
 

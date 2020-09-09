@@ -3,6 +3,7 @@ package cat.tecnocampus.tinder.api;
 import cat.tecnocampus.tinder.application.ProfileController;
 import cat.tecnocampus.tinder.domain.Profile;
 import com.google.gson.Gson;
+import org.apache.naming.factory.SendMailFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,11 @@ public class ProfileRestController {
 	@GetMapping("/fullProfiles")
 	public List<Profile> getfullProfiles() {
 		return profileController.getFullProfiles();
+	}
+
+	@GetMapping("/{email}/candidates")
+	public List<Profile> getCandidates(@PathVariable String email) {
+		return profileController.getCandidates(email);
 	}
 
 	@PostMapping("/profiles")
