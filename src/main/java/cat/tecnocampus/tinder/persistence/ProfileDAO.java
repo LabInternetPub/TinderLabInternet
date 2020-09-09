@@ -5,7 +5,6 @@ import cat.tecnocampus.tinder.domain.Profile;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.simpleflatmapper.jdbc.spring.RowMapperImpl;
-import org.simpleflatmapper.jdbc.spring.SqlParameterSourceFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,9 +22,9 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	private final String queryProfilesLazy = "select email, nickname, gender, attraction, passion from tinder_user";
 
 	private final String queryProfile = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as candidates_target, p.matched as candidates_matched from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
+			"p.target as likes_target, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
 	private final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as candidates_target, p.matched as candidates_matched from tinder_user u left join proposal p on u.email = p.origin";
+			"p.target as likes_target, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin";
 
 	private final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
 
@@ -76,7 +75,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 		Profile result;
 		try {
 			result = jdbcTemplate.queryForObject(queryProfile, new Object[]{email}, profileRowMapper);
-			cleanEmptyProposals(result);
+			cleanEmptyLikes(result);
 			return result;
 		} catch (EmptyResultDataAccessException e) {
 			throw new ProfileNotFound(email);
@@ -87,15 +86,15 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	public List<Profile> getProfiles() {
 		List<Profile> result;
 		result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
-		result.stream().forEach(this::cleanEmptyProposals);
+		result.stream().forEach(this::cleanEmptyLikes);
 		return result;
 	}
 
-	//Avoid list of candidates with an invalid candidate when the profile hasn't any
-	private void cleanEmptyProposals(Profile profile) {
-		boolean hasNullCandidates = profile.getCandidates().stream().anyMatch(c -> c.getTarget() == null);
+	//Avoid list of candidates with an invalid like when the profile hasn't any
+	private void cleanEmptyLikes(Profile profile) {
+		boolean hasNullCandidates = profile.getLikes().stream().anyMatch(c -> c.getTarget() == null);
 		if (hasNullCandidates) {
-			profile.setCandidates(new ArrayList<>());
+			profile.setLikes(new ArrayList<>());
 		}
 	}
 

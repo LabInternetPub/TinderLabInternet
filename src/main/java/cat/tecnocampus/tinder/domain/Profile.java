@@ -1,8 +1,5 @@
 package cat.tecnocampus.tinder.domain;
 
-
-import cat.tecnocampus.tinder.utilities.InvalidParameterException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class Profile {
 	private Gender attraction;
 	private Passion passion;
 
-	private List<Proposal> candidates = new ArrayList<>();
+	private List<Proposal> likes = new ArrayList<>();
 
 	public Profile() {
 
@@ -48,8 +45,8 @@ public class Profile {
 		return passion;
 	}
 
-	public List<Proposal> getCandidates() {
-		return candidates;
+	public List<Proposal> getLikes() {
+		return likes;
 	}
 
 	public void setEmail(String email) {
@@ -76,23 +73,12 @@ public class Profile {
 		this.passion = passion;
 	}
 
-	public void setCandidates(List<Proposal> proposals) {
-		this.candidates = proposals;
+	public void setLikes(List<Proposal> proposals) {
+		this.likes = proposals;
 	}
 
-	public boolean getCompatibility(Profile user) {
-		if (this.isAttracted(user)) {
-			if (user.getPassion() == this.passion)
-				return true;
-		}
-		return false;
-
-	}
-
-	private boolean isAttracted(Profile user) {
-		if (user.getGender() == this.attraction)
-			return true;
-		return this.attraction == Gender.Bisexual;
+	private boolean isCompatible(Profile user) {
+		return (user.getGender() == this.getAtraction() || this.attraction == Gender.Bisexual) && user.getPassion() == this.passion;
 	}
 
 }

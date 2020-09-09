@@ -29,6 +29,7 @@ public class ProfileController {
 		return profileDAO.getProfiles();
 	}
 
+
 	public String addProfile(Profile profile) {
 		return profileDAO.addProfile(profile);
 	}
