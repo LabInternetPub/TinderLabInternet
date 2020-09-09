@@ -24,20 +24,6 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	private JdbcTemplate jdbcTemplate;
 
-	private final String queryProfileLazy = "select email, nickname, gender, attraction, passion from tinder_user where email = ?";
-	private final String queryProfilesLazy = "select email, nickname, gender, attraction, passion from tinder_user";
-
-	private final String queryProfile = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
-	private final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join proposal p on u.email = p.origin";
-
-	private final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
-
-	private final String insertProposal = "INSERT INTO proposal (origin, target, matched, creation_date) VALUES (?, ?, ?, ?)";
-
-	private final String updateProposal = "UPDATE proposal SET matched = true, match_date = ? where origin = ? AND target = ?";
-
 	private final RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
 		Profile profile = new Profile();
 
@@ -68,6 +54,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public Profile getProfileLazy(String email) {
+		final String queryProfileLazy = "select email, nickname, gender, attraction, passion from tinder_user where email = ?";
 		try {
 			return jdbcTemplate.queryForObject(queryProfileLazy, new Object[]{email}, profileRowMapperLazy);
 		} catch (EmptyResultDataAccessException e) {
@@ -77,11 +64,14 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public List<Profile> getProfilesLazy() {
+		final String queryProfilesLazy = "select email, nickname, gender, attraction, passion from tinder_user";
 		return jdbcTemplate.query(queryProfilesLazy, profileRowMapperLazy);
 	}
 
 	@Override
 	public Profile getProfile(String email) {
+		final String queryProfile = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
+				"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
 		Profile result;
 		try {
 			result = jdbcTemplate.queryForObject(queryProfile, new Object[]{email}, profileRowMapper);
@@ -94,6 +84,8 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public List<Profile> getProfiles() {
+		final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
+				"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join proposal p on u.email = p.origin";
 		List<Profile> result;
 		result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
 		result.stream().forEach(this::cleanEmptyLikes);
@@ -110,6 +102,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public String addProfile(Profile profile) {
+		final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
 		jdbcTemplate.update(insertProfile, profile.getEmail(), profile.getNickname(), profile.getGender().toString(),
 				profile.getAtraction().toString(), profile.getPassion().toString());
 
@@ -118,6 +111,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public void saveLikes(String origin, List<Proposal> proposals) {
+		final String insertProposal = "INSERT INTO proposal (origin, target, matched, creation_date) VALUES (?, ?, ?, ?)";
 		jdbcTemplate.batchUpdate(insertProposal, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
@@ -137,6 +131,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public void updateLikeToMatch(String origin, String target) {
+		final String updateProposal = "UPDATE proposal SET matched = true, match_date = ? where origin = ? AND target = ?";
 		jdbcTemplate.update(updateProposal, Date.valueOf(LocalDate.now()), origin, target);
 	}
 }
