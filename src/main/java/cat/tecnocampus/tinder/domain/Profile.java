@@ -2,9 +2,9 @@ package cat.tecnocampus.tinder.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Profile {
-
 	public enum Gender {Man, Woman, Indefinite, Bisexual}
 	public enum Passion {Sport, Music, Walk, Dance}
 
@@ -77,10 +77,25 @@ public class Profile {
 		this.likes = proposals;
 	}
 
+	public void addLikes(List<Proposal> proposals) {
+		this.likes.addAll(proposals);
+	}
+
 	public boolean isCompatible(Profile user) {
 		if (user.getEmail().equals(this.email)) //to avoid narcicists
 			return false;
 		return (user.getGender() == this.getAtraction() || this.attraction == Gender.Bisexual) && user.getPassion() == this.passion;
 	}
+
+	public boolean likes(Profile target) {
+		return this.getLikes().stream().anyMatch(l -> l.getTarget().equals(target.getEmail()));
+	}
+
+	public void setMatch(Profile target) {
+		Optional<Proposal> proposal = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getEmail())).findFirst();
+		if (proposal.isPresent())
+			proposal.get().setMatched(true);
+	}
+
 
 }

@@ -2,14 +2,19 @@ package cat.tecnocampus.tinder.persistence;
 
 import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
 import cat.tecnocampus.tinder.domain.Profile;
+import cat.tecnocampus.tinder.domain.Proposal;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.simpleflatmapper.jdbc.spring.RowMapperImpl;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +32,10 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin";
 
 	private final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
+
+	private final String insertProposal = "INSERT INTO proposal (origin, target, matched, creation_date) VALUES (?, ?, ?, ?)";
+
+	private final String updateProposal = "UPDATE proposal SET matched = true where origin = ? AND target = ?";
 
 	private final RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
 		Profile profile = new Profile();
@@ -106,4 +115,27 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 		return profile.getEmail();
 	}
 
+	@Override
+	public void saveLikes(String origin, List<Proposal> proposals) {
+		jdbcTemplate.batchUpdate(insertProposal, new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
+				Proposal proposal = proposals.get(i);
+				preparedStatement.setString(1, origin);
+				preparedStatement.setString(2, proposal.getTarget());
+				preparedStatement.setBoolean(3, proposal.isMatched());
+				preparedStatement.setDate(4, Date.valueOf(proposal.getCreationDate()));
+			}
+
+			@Override
+			public int getBatchSize() {
+				return proposals.size();
+			}
+		});
+	}
+
+	@Override
+	public void updateLikeToMatch(String origin, String target) {
+		jdbcTemplate.update(updateProposal, origin, target);
+	}
 }

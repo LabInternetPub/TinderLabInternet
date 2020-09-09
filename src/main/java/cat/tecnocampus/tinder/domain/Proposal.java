@@ -10,6 +10,12 @@ public class Proposal {
     public Proposal() {
     }
 
+    public Proposal(String target) {
+        this.target = target;
+        date = LocalDate.now();
+        matched = false;
+    }
+
     public String getTarget() {
         return target;
     }
