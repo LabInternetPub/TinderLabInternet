@@ -5,6 +5,7 @@ import cat.tecnocampus.tinder.domain.Profile;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.simpleflatmapper.jdbc.spring.RowMapperImpl;
+import org.simpleflatmapper.jdbc.spring.SqlParameterSourceFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,7 +27,9 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	private final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
 			"p.target as candidates_target, p.matched as candidates_matched from tinder_user u left join proposal p on u.email = p.origin";
 
-	private RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
+	private final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
+
+	private final RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
 		Profile profile = new Profile();
 
 		profile.setEmail(resultSet.getString("email"));
@@ -94,6 +97,14 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 		if (hasNullCandidates) {
 			profile.setCandidates(new ArrayList<>());
 		}
+	}
+
+	@Override
+	public String addProfile(Profile profile) {
+		jdbcTemplate.update(insertProfile, profile.getEmail(), profile.getNickname(), profile.getGender().toString(),
+				profile.getAtraction().toString(), profile.getPassion().toString());
+
+		return profile.getEmail();
 	}
 
 }

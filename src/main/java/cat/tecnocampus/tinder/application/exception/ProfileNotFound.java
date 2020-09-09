@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value= HttpStatus.NOT_FOUND, reason="Not found")
 public class ProfileNotFound extends RuntimeException{
     public ProfileNotFound(String email)  {
-        super("Student " + email + " does not exist");
+        super("User " + email + " does not exist");
     }
 }

@@ -12,4 +12,6 @@ public interface ProfileDAO {
     Profile getProfile(String email);
     List<Profile> getProfiles();
 
+    String addProfile(Profile profile);
+
 }

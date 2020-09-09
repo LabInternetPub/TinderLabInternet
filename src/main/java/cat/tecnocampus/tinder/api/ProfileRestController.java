@@ -2,6 +2,7 @@ package cat.tecnocampus.tinder.api;
 
 import cat.tecnocampus.tinder.application.ProfileController;
 import cat.tecnocampus.tinder.domain.Profile;
+import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,5 +37,19 @@ public class ProfileRestController {
 	@GetMapping("/fullProfiles")
 	public List<Profile> getfullProfiles() {
 		return profileController.getFullProfiles();
+	}
+
+	@PostMapping("/profiles")
+	public String addProfile(@RequestBody Profile profile) {
+		return profileController.addProfile(profile);
+	}
+
+	@PostMapping("/profilesString")
+	public String addProfile(@RequestBody String profile) {
+		Gson gson = new Gson();
+
+		Profile user=gson.fromJson(profile, Profile.class);
+		profileController.addProfile(user);;
+		return gson.toJson(user);
 	}
 }
