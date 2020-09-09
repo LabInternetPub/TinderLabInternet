@@ -5,15 +5,17 @@ import java.time.LocalDate;
 public class Proposal {
     private String target;
     private boolean matched;
-    private LocalDate date;
+    private LocalDate creationDate;
+    private LocalDate matchDate;
 
     public Proposal() {
     }
 
     public Proposal(String target) {
         this.target = target;
-        date = LocalDate.now();
+        creationDate = LocalDate.now();
         matched = false;
+        matchDate = null;
     }
 
     public String getTarget() {
@@ -33,10 +35,18 @@ public class Proposal {
     }
 
     public LocalDate getCreationDate() {
-        return date;
+        return creationDate;
     }
 
     public void setCreationDate(LocalDate date) {
-        this.date = date;
+        this.creationDate = date;
+    }
+
+    public LocalDate getMatchDate() {
+        return matchDate;
+    }
+
+    public void setMatchDate(LocalDate matchDate) {
+        this.matchDate = matchDate;
     }
 }

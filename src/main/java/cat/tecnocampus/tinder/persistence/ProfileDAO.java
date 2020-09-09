@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +28,15 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	private final String queryProfilesLazy = "select email, nickname, gender, attraction, passion from tinder_user";
 
 	private final String queryProfile = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
+			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
 	private final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin";
+			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join proposal p on u.email = p.origin";
 
 	private final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
 
 	private final String insertProposal = "INSERT INTO proposal (origin, target, matched, creation_date) VALUES (?, ?, ?, ?)";
 
-	private final String updateProposal = "UPDATE proposal SET matched = true where origin = ? AND target = ?";
+	private final String updateProposal = "UPDATE proposal SET matched = true, match_date = ? where origin = ? AND target = ?";
 
 	private final RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
 		Profile profile = new Profile();
@@ -136,6 +137,6 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public void updateLikeToMatch(String origin, String target) {
-		jdbcTemplate.update(updateProposal, origin, target);
+		jdbcTemplate.update(updateProposal, Date.valueOf(LocalDate.now()), origin, target);
 	}
 }
