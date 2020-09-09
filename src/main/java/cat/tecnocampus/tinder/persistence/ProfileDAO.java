@@ -22,9 +22,9 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	private final String queryProfilesLazy = "select email, nickname, gender, attraction, passion from tinder_user";
 
 	private final String queryProfile = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as likes_target, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
+			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin where u.email = ?";
 	private final String queryProfiles = "select u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-			"p.target as likes_target, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin";
+			"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched from tinder_user u left join proposal p on u.email = p.origin";
 
 	private final String insertProfile = "INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?)";
 

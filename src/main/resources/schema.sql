@@ -15,6 +15,7 @@ CREATE TABLE proposal
 (
   origin VARCHAR (100),
   target VARCHAR (100),
+  creation_date DATE ,
   matched TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (origin, target)
 );

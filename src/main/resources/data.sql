@@ -3,8 +3,8 @@ INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('
 INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('maria@tecnocampus.cat', 'Maria', 'Woman', 'Man', 'Sport');
 INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('marta@tecnocampus.cat', 'Marta', 'Woman', 'Man', 'Sport');
 
-INSERT INTO proposal(origin, target) VALUES ('josep@tecnocampus.cat', 'marta@tecnocampus.cat');
-INSERT INTO proposal(origin, target) VALUES ('josep@tecnocampus.cat', 'maria@tecnocampus.cat');
-INSERT INTO proposal(origin, target) VALUES ('josep@tecnocampus.cat', 'jordi@tecnocampus.cat');
-INSERT INTO proposal(origin, target) VALUES ('jordi@tecnocampus.cat', 'marta@tecnocampus.cat');
-INSERT INTO proposal(origin, target) VALUES ('jordi@tecnocampus.cat', 'maria@tecnocampus.cat');
+INSERT INTO proposal(origin, target, creation_date) VALUES ('josep@tecnocampus.cat', 'marta@tecnocampus.cat', current_date());
+INSERT INTO proposal(origin, target, creation_date) VALUES ('josep@tecnocampus.cat', 'maria@tecnocampus.cat', current_date());
+INSERT INTO proposal(origin, target, creation_date) VALUES ('josep@tecnocampus.cat', 'jordi@tecnocampus.cat', current_date());
+INSERT INTO proposal(origin, target, creation_date) VALUES ('jordi@tecnocampus.cat', 'marta@tecnocampus.cat', current_date());
+INSERT INTO proposal(origin, target, creation_date) VALUES ('jordi@tecnocampus.cat', 'maria@tecnocampus.cat', current_date());

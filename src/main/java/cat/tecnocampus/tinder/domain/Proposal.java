@@ -1,8 +1,11 @@
 package cat.tecnocampus.tinder.domain;
 
+import java.time.LocalDate;
+
 public class Proposal {
     private String target;
     private boolean matched;
+    private LocalDate date;
 
     public Proposal() {
     }
@@ -21,5 +24,13 @@ public class Proposal {
 
     public void setMatched(boolean matched) {
         this.matched = matched;
+    }
+
+    public LocalDate getCreationDate() {
+        return date;
+    }
+
+    public void setCreationDate(LocalDate date) {
+        this.date = date;
     }
 }
