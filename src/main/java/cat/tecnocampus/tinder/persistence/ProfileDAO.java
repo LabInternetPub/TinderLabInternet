@@ -2,7 +2,7 @@ package cat.tecnocampus.tinder.persistence;
 
 import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
 import cat.tecnocampus.tinder.domain.Profile;
-import cat.tecnocampus.tinder.domain.Proposal;
+import cat.tecnocampus.tinder.domain.Like;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.simpleflatmapper.jdbc.spring.RowMapperImpl;
@@ -110,21 +110,21 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	}
 
 	@Override
-	public void saveLikes(String origin, List<Proposal> proposals) {
+	public void saveLikes(String origin, List<Like> likes) {
 		final String insertProposal = "INSERT INTO proposal (origin, target, matched, creation_date) VALUES (?, ?, ?, ?)";
 		jdbcTemplate.batchUpdate(insertProposal, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
-				Proposal proposal = proposals.get(i);
+				Like like = likes.get(i);
 				preparedStatement.setString(1, origin);
-				preparedStatement.setString(2, proposal.getTarget());
-				preparedStatement.setBoolean(3, proposal.isMatched());
-				preparedStatement.setDate(4, Date.valueOf(proposal.getCreationDate()));
+				preparedStatement.setString(2, like.getTarget());
+				preparedStatement.setBoolean(3, like.isMatched());
+				preparedStatement.setDate(4, Date.valueOf(like.getCreationDate()));
 			}
 
 			@Override
 			public int getBatchSize() {
-				return proposals.size();
+				return likes.size();
 			}
 		});
 	}

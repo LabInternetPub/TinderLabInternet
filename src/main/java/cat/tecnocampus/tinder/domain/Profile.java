@@ -8,17 +8,25 @@ public class Profile {
 	public enum Gender {Man, Woman, Indefinite, Bisexual}
 	public enum Passion {Sport, Music, Walk, Dance}
 
+	private String id;
 	private String email;
 	private String nickname;
-	private String password;
 	private Gender gender;
 	private Gender attraction;
 	private Passion passion;
 
-	private List<Proposal> likes = new ArrayList<>();
+	private List<Like> likes = new ArrayList<>();
 
 	public Profile() {
 
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -27,10 +35,6 @@ public class Profile {
 
 	public String getNickname() {
 		return nickname;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	public Gender getGender() {
@@ -45,7 +49,7 @@ public class Profile {
 		return passion;
 	}
 
-	public List<Proposal> getLikes() {
+	public List<Like> getLikes() {
 		return likes;
 	}
 
@@ -55,10 +59,6 @@ public class Profile {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public void setGender(Gender gender) {
@@ -73,12 +73,12 @@ public class Profile {
 		this.passion = passion;
 	}
 
-	public void setLikes(List<Proposal> proposals) {
-		this.likes = proposals;
+	public void setLikes(List<Like> likes) {
+		this.likes = likes;
 	}
 
-	public void addLikes(List<Proposal> proposals) {
-		this.likes.addAll(proposals);
+	public void addLikes(List<Like> likes) {
+		this.likes.addAll(likes);
 	}
 
 	public boolean isCompatible(Profile user) {
@@ -92,7 +92,7 @@ public class Profile {
 	}
 
 	public void setMatch(Profile target) {
-		Optional<Proposal> proposal = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getEmail())).findFirst();
+		Optional<Like> proposal = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getEmail())).findFirst();
 		if (proposal.isPresent())
 			proposal.get().setMatched(true);
 	}

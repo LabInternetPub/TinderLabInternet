@@ -1,7 +1,8 @@
 DROP TABLE if EXISTS tinder_user;
 CREATE TABLE tinder_user
 (
-  email VARCHAR (100) PRIMARY KEY,
+  id VARCHAR (256) PRIMARY KEY ,
+  email VARCHAR (100) ,
   nickname VARCHAR (255),
   gender VARCHAR (50),
   attraction VARCHAR (50),
@@ -10,11 +11,11 @@ CREATE TABLE tinder_user
   enabled TINYINT NOT NULL DEFAULT 1
 );
 
-DROP TABLE if EXISTS proposal;
-CREATE TABLE proposal
+DROP TABLE if EXISTS tinder_like;
+CREATE TABLE tinder_like
 (
-  origin VARCHAR (100),
-  target VARCHAR (100),
+  origin VARCHAR (256),
+  target VARCHAR (256),
   creation_date DATE,
   match_date DATE DEFAULT NULL,
   matched TINYINT NOT NULL DEFAULT 0,

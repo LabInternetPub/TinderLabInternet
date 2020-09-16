@@ -1,12 +1,13 @@
-INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('josep@tecnocampus.cat', 'El crack', 'Indefinite', 'Bisexual', 'Sport');
-INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('jordi@tecnocampus.cat', 'The best', 'Man', 'Bisexual', 'Sport');
-INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('maria@tecnocampus.cat', 'Maria', 'Woman', 'Man', 'Sport');
-INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('marta@tecnocampus.cat', 'Marta', 'Woman', 'Man', 'Sport');
-INSERT INTO tinder_user (email, nickname, gender, attraction, passion) VALUES ('pepe@tecnocampus.cat', 'Pepeillo', 'Man', 'Bisexual', 'Sport');
+INSERT INTO tinder_user (id, email, nickname, gender, attraction, passion) VALUES (to_char(random_uuid()), 'josep@tecnocampus.cat', 'El crack', 'Indefinite', 'Bisexual', 'Sport');
+INSERT INTO tinder_user (id, email, nickname, gender, attraction, passion) VALUES (to_char(random_uuid()), 'jordi@tecnocampus.cat', 'The best', 'Man', 'Bisexual', 'Sport');
+INSERT INTO tinder_user (id, email, nickname, gender, attraction, passion) VALUES (to_char(random_uuid()), 'maria@tecnocampus.cat', 'Maria', 'Woman', 'Man', 'Sport');
+INSERT INTO tinder_user (id, email, nickname, gender, attraction, passion) VALUES (to_char(random_uuid()), 'marta@tecnocampus.cat', 'Marta', 'Woman', 'Man', 'Sport');
+INSERT INTO tinder_user (id, email, nickname, gender, attraction, passion) VALUES (to_char(random_uuid()), 'pepe@tecnocampus.cat', 'Pepeillo', 'Man', 'Bisexual', 'Sport');
 
-INSERT INTO proposal(origin, target, creation_date) VALUES ('josep@tecnocampus.cat', 'marta@tecnocampus.cat', current_date());
-INSERT INTO proposal(origin, target, creation_date) VALUES ('josep@tecnocampus.cat', 'maria@tecnocampus.cat', current_date());
-INSERT INTO proposal(origin, target, creation_date) VALUES ('josep@tecnocampus.cat', 'jordi@tecnocampus.cat', current_date());
-INSERT INTO proposal(origin, target, creation_date) VALUES ('jordi@tecnocampus.cat', 'marta@tecnocampus.cat', current_date());
-INSERT INTO proposal(origin, target, creation_date) VALUES ('jordi@tecnocampus.cat', 'maria@tecnocampus.cat', current_date());
-INSERT INTO proposal(origin, target, creation_date) VALUES ('marta@tecnocampus.cat', 'pepe@tecnocampus.cat', current_date());
+INSERT INTO tinder_like(origin, target, creation_date) select id, (select id from tinder_user where email = 'marta@tecnocampus.cat'), current_date() from tinder_user where email = 'josep@tecnocampus.cat';
+INSERT INTO tinder_like(origin, target, creation_date) select id, (select id from tinder_user where email = 'maria@tecnocampus.cat'), current_date() from tinder_user where email = 'josep@tecnocampus.cat';
+INSERT INTO tinder_like(origin, target, creation_date) select id, (select id from tinder_user where email = 'jordi@tecnocampus.cat'), current_date() from tinder_user where email = 'josep@tecnocampus.cat';
+INSERT INTO tinder_like(origin, target, creation_date) select id, (select id from tinder_user where email = 'marta@tecnocampus.cat'), current_date() from tinder_user where email = 'jordi@tecnocampus.cat';
+INSERT INTO tinder_like(origin, target, creation_date) select id, (select id from tinder_user where email = 'maria@tecnocampus.cat'), current_date() from tinder_user where email = 'jordi@tecnocampus.cat';
+INSERT INTO tinder_like(origin, target, creation_date) select id, (select id from tinder_user where email = 'pepe@tecnocampus.cat'), current_date() from tinder_user where email = 'marta@tecnocampus.cat';
+

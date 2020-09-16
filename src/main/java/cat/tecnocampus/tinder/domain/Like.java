@@ -2,16 +2,16 @@ package cat.tecnocampus.tinder.domain;
 
 import java.time.LocalDate;
 
-public class Proposal {
+public class Like {
     private String target;
     private boolean matched;
     private LocalDate creationDate;
     private LocalDate matchDate;
 
-    public Proposal() {
+    public Like() {
     }
 
-    public Proposal(String target) {
+    public Like(String target) {
         this.target = target;
         creationDate = LocalDate.now();
         matched = false;

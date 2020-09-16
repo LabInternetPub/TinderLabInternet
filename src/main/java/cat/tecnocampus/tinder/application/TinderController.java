@@ -1,7 +1,7 @@
 package cat.tecnocampus.tinder.application;
 
 import cat.tecnocampus.tinder.domain.Profile;
-import cat.tecnocampus.tinder.domain.Proposal;
+import cat.tecnocampus.tinder.domain.Like;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,13 +43,13 @@ public class TinderController {
 	public int newLikes(String originMail, List<String> targetMails) {
 		Profile origin = profileDAO.getProfile(originMail); //check it exists in BBDD
 
-		List<Proposal> proposals =
+		List<Like> likes =
 		targetMails.stream().map(profileDAO::getProfile) 	//check it exists in BBDD
 				.filter(origin::isCompatible) 				 //make sure it is compatible
 				.map(t -> createAndMatchProposal(origin, t)).collect(Collectors.toList());
 
-		origin.addLikes(proposals);
-		profileDAO.saveLikes(origin.getEmail(), proposals);
+		origin.addLikes(likes);
+		profileDAO.saveLikes(origin.getEmail(), likes);
 		return targetMails.size();
 	}
 
@@ -57,13 +57,13 @@ public class TinderController {
 	// 1.- Create proposal
 	// 2.- Set proposal to match if it does
 	// 3.- Update the target like to match in the DDBB
-	private Proposal createAndMatchProposal(Profile origin, Profile target) {
-		Proposal proposal = new Proposal(target.getEmail());
+	private Like createAndMatchProposal(Profile origin, Profile target) {
+		Like like = new Like(target.getEmail());
 		if (target.likes(origin)) {
-			proposal.setMatched(true);  	//origin set to match
+			like.setMatched(true);  	//origin set to match
 			target.setMatch(origin);		//target set to match
 			profileDAO.updateLikeToMatch(target.getEmail(), origin.getEmail());
 		}
-		return proposal;
+		return like;
 	}
 }
