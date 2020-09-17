@@ -1,4 +1,4 @@
-package cat.tecnocampus.tinder.api;
+package cat.tecnocampus.tinder.api.frontendException;
 
 import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
 import org.springframework.http.HttpStatus;

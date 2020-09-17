@@ -1,5 +1,6 @@
 package cat.tecnocampus.tinder.api;
 
+import cat.tecnocampus.tinder.api.frontendException.IncorrectRESTParameter;
 import cat.tecnocampus.tinder.application.TinderController;
 import cat.tecnocampus.tinder.domain.Profile;
 import com.google.gson.Gson;
@@ -17,28 +18,31 @@ public class ProfileRestController {
 		this.tinderController = tinderController;
 	}
 
-	@GetMapping("/profiles/{email}")
-	public Profile getProfile(@PathVariable String email) throws Exception {
-		Profile user = tinderController.getProfileLazy(email);
+	@GetMapping("/profiles/{id}")
+	public Profile getProfile(@PathVariable String id, @RequestParam(defaultValue = "lazy") String mode) throws Exception {
+		Profile user;
+		if (mode.equalsIgnoreCase("lazy"))
+			user = tinderController.getProfileLazy(id);
+		else {
+			if (mode.equalsIgnoreCase("eager"))
+				user = tinderController.getFullProfile(id);
+			else throw new IncorrectRESTParameter("mode", mode);
+		}
 		return user;
 	}
 
 	@GetMapping("/profiles")
-	public List<Profile> getProfiles() {
-		return tinderController.getProfilesLazy();
+	public List<Profile> getProfiles(@RequestParam(defaultValue = "lazy") String mode) {
+		if (mode.equalsIgnoreCase("lazy"))
+			return tinderController.getProfilesLazy();
+		else {
+			if (mode.equalsIgnoreCase("eager"))
+				return tinderController.getFullProfiles();
+			else throw new IncorrectRESTParameter("mode", mode);
+		}
 	}
 
-	@GetMapping("/fullProfiles/{email}")
-	public Profile getFullProfile(@PathVariable String email) throws Exception {
-		Profile user = tinderController.getFullProfile(email);
-		return user;
-	}
-
-	@GetMapping("/fullProfiles")
-	public List<Profile> getfullProfiles() {
-		return tinderController.getFullProfiles();
-	}
-
+	//Returns profiles that match the user (id) preferences
 	@GetMapping("/{email}/candidates")
 	public List<Profile> getCandidates(@PathVariable String email) {
 		return tinderController.getCandidates(email);
