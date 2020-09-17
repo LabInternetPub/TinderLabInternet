@@ -3,12 +3,23 @@ package cat.tecnocampus.tinder.application.dto;
 import cat.tecnocampus.tinder.domain.Like;
 import cat.tecnocampus.tinder.domain.Profile;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileDTO {
     private String id;
+
+    @Pattern(regexp = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}\\b",
+            message = "Email must look like an email")
+    @NotNull(message = "Email cannot be null")
+    @NotBlank(message = "Email cannot be blank")
     private String email;
+
+    @Size(min=5, max=10)
     private String nickname;
     private Profile.Gender gender;
     private Profile.Gender attraction;

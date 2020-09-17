@@ -7,6 +7,7 @@ import cat.tecnocampus.tinder.domain.Profile;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -50,17 +51,8 @@ public class ProfileRestController {
 	}
 
 	@PostMapping("/profiles")
-	public ProfileDTO addProfile(@RequestBody ProfileDTO profile) {
+	public ProfileDTO addProfile(@RequestBody @Valid ProfileDTO profile) {
 		return tinderController.addProfile(profile);
-	}
-
-	@PostMapping("/profilesString")
-	public String addProfile(@RequestBody String profile) {
-		Gson gson = new Gson();
-
-		ProfileDTO user=gson.fromJson(profile, ProfileDTO.class);
-		tinderController.addProfile(user);;
-		return gson.toJson(user);
 	}
 
 	@PostMapping("/likes")
