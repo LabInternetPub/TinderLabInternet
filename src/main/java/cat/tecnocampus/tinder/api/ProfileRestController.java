@@ -49,7 +49,7 @@ public class ProfileRestController {
 	}
 
 	@PostMapping("/profiles")
-	public String addProfile(@RequestBody Profile profile) {
+	public Profile addProfile(@RequestBody Profile profile) {
 		return tinderController.addProfile(profile);
 	}
 

@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface ProfileDAO {
 
-    Profile getProfileLazy(String email);
+    Profile getProfileLazy(String id);
     List<Profile> getProfilesLazy();
 
-    Profile getProfile(String email);
+    Profile getProfile(String id);
     List<Profile> getProfiles();
 
-    String addProfile(Profile profile);
+    Profile addProfile(Profile profile);
 
     void saveLikes(String origin, List<Like> likes);
 
-    void updateLikeToMatch(String email, String email1);
+    void updateLikeToMatch(String id, String id1);
 }
