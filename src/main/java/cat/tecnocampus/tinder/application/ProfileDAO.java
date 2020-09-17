@@ -1,5 +1,6 @@
 package cat.tecnocampus.tinder.application;
 
+import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import cat.tecnocampus.tinder.domain.Profile;
 import cat.tecnocampus.tinder.domain.Like;
 
@@ -7,13 +8,13 @@ import java.util.List;
 
 public interface ProfileDAO {
 
-    Profile getProfileLazy(String id);
-    List<Profile> getProfilesLazy();
+    ProfileDTO getProfileLazy(String id);
+    List<ProfileDTO> getProfilesLazy();
 
-    Profile getProfile(String id);
-    List<Profile> getProfiles();
+    ProfileDTO getProfile(String id);
+    List<ProfileDTO> getProfiles();
 
-    Profile addProfile(Profile profile);
+    ProfileDTO addProfile(ProfileDTO profile);
 
     void saveLikes(String origin, List<Like> likes);
 

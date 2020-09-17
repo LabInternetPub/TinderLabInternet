@@ -41,7 +41,7 @@ public class Profile {
 		return gender;
 	}
 
-	public Gender getAtraction() {
+	public Gender getAttraction() {
 		return attraction;
 	}
 
@@ -82,19 +82,19 @@ public class Profile {
 	}
 
 	public boolean isCompatible(Profile user) {
-		if (user.getEmail().equals(this.email)) //to avoid narcicists
+		if (user.getId().equals(this.id)) //to avoid narcicists
 			return false;
-		return (user.getGender() == this.getAtraction() || this.attraction == Gender.Bisexual) && user.getPassion() == this.passion;
+		return (user.getGender() == this.getAttraction() || this.attraction == Gender.Bisexual) && user.getPassion() == this.passion;
 	}
 
 	public boolean likes(Profile target) {
-		return this.getLikes().stream().anyMatch(l -> l.getTarget().equals(target.getEmail()));
+		return this.getLikes().stream().anyMatch(l -> l.getTarget().equals(target.getId()));
 	}
 
 	public void setMatch(Profile target) {
-		Optional<Like> proposal = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getEmail())).findFirst();
-		if (proposal.isPresent())
-			proposal.get().setMatched(true);
+		Optional<Like> like = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getId())).findFirst();
+		if (like.isPresent())
+			like.get().setMatched(true);
 	}
 
 

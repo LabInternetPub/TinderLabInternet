@@ -2,6 +2,7 @@ package cat.tecnocampus.tinder.api;
 
 import cat.tecnocampus.tinder.api.frontendException.IncorrectRESTParameter;
 import cat.tecnocampus.tinder.application.TinderController;
+import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import cat.tecnocampus.tinder.domain.Profile;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,8 @@ public class ProfileRestController {
 	}
 
 	@GetMapping("/profiles/{id}")
-	public Profile getProfile(@PathVariable String id, @RequestParam(defaultValue = "lazy") String mode) throws Exception {
-		Profile user;
+	public ProfileDTO getProfile(@PathVariable String id, @RequestParam(defaultValue = "lazy") String mode) throws Exception {
+		ProfileDTO user;
 		if (mode.equalsIgnoreCase("lazy"))
 			user = tinderController.getProfileLazy(id);
 		else {
@@ -32,7 +33,7 @@ public class ProfileRestController {
 	}
 
 	@GetMapping("/profiles")
-	public List<Profile> getProfiles(@RequestParam(defaultValue = "lazy") String mode) {
+	public List<ProfileDTO> getProfiles(@RequestParam(defaultValue = "lazy") String mode) {
 		if (mode.equalsIgnoreCase("lazy"))
 			return tinderController.getProfilesLazy();
 		else {
@@ -44,12 +45,12 @@ public class ProfileRestController {
 
 	//Returns profiles that match the user (id) preferences
 	@GetMapping("/{email}/candidates")
-	public List<Profile> getCandidates(@PathVariable String email) {
+	public List<ProfileDTO> getCandidates(@PathVariable String email) {
 		return tinderController.getCandidates(email);
 	}
 
 	@PostMapping("/profiles")
-	public Profile addProfile(@RequestBody Profile profile) {
+	public ProfileDTO addProfile(@RequestBody ProfileDTO profile) {
 		return tinderController.addProfile(profile);
 	}
 
@@ -57,7 +58,7 @@ public class ProfileRestController {
 	public String addProfile(@RequestBody String profile) {
 		Gson gson = new Gson();
 
-		Profile user=gson.fromJson(profile, Profile.class);
+		ProfileDTO user=gson.fromJson(profile, ProfileDTO.class);
 		tinderController.addProfile(user);;
 		return gson.toJson(user);
 	}

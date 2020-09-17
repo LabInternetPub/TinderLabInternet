@@ -1,5 +1,6 @@
 package cat.tecnocampus.tinder.persistence;
 
+import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
 import cat.tecnocampus.tinder.domain.Profile;
 import cat.tecnocampus.tinder.domain.Like;
@@ -24,8 +25,8 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	private JdbcTemplate jdbcTemplate;
 
-	private final RowMapper<Profile> profileRowMapperLazy = (resultSet, i) -> {
-		Profile profile = new Profile();
+	private final RowMapper<ProfileDTO> profileRowMapperLazy = (resultSet, i) -> {
+		ProfileDTO profile = new ProfileDTO();
 
 		profile.setId(resultSet.getString("id"));
 		profile.setEmail(resultSet.getString("email"));
@@ -37,24 +38,24 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 		return profile;
 	};
 
-	ResultSetExtractorImpl<Profile> profilesRowMapper =
+	ResultSetExtractorImpl<ProfileDTO> profilesRowMapper =
 			JdbcTemplateMapperFactory
 					.newInstance()
 					.addKeys("id")
-					.newResultSetExtractor(Profile.class);
+					.newResultSetExtractor(ProfileDTO.class);
 
-	RowMapperImpl<Profile> profileRowMapper =
+	RowMapperImpl<ProfileDTO> profileRowMapper =
 			JdbcTemplateMapperFactory
 					.newInstance()
 					.addKeys("id")
-					.newRowMapper(Profile.class);
+					.newRowMapper(ProfileDTO.class);
 
 	public ProfileDAO(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	@Override
-	public Profile getProfileLazy(String id) {
+	public ProfileDTO getProfileLazy(String id) {
 		final String queryProfileLazy = "select id, email, nickname, gender, attraction, passion from tinder_user where id = ?";
 		try {
 			return jdbcTemplate.queryForObject(queryProfileLazy, new Object[]{id}, profileRowMapperLazy);
@@ -64,16 +65,16 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	}
 
 	@Override
-	public List<Profile> getProfilesLazy() {
+	public List<ProfileDTO> getProfilesLazy() {
 		final String queryProfilesLazy = "select id, email, nickname, gender, attraction, passion from tinder_user";
 		return jdbcTemplate.query(queryProfilesLazy, profileRowMapperLazy);
 	}
 
 	@Override
-	public Profile getProfile(String id) {
+	public ProfileDTO getProfile(String id) {
 		final String queryProfile = "select u.id as id, u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
 				"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join tinder_like p on u.id = p.origin where u.id = ?";
-		Profile result;
+		ProfileDTO result;
 		try {
 			result = jdbcTemplate.queryForObject(queryProfile, new Object[]{id}, profileRowMapper);
 			cleanEmptyLikes(result);
@@ -84,17 +85,17 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	}
 
 	@Override
-	public List<Profile> getProfiles() {
+	public List<ProfileDTO> getProfiles() {
 		final String queryProfiles = "select u.id as id, u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
 				"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join tinder_like p on u.id = p.origin";
-		List<Profile> result;
+		List<ProfileDTO> result;
 		result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
 		result.stream().forEach(this::cleanEmptyLikes);
 		return result;
 	}
 
 	//Avoid list of candidates with an invalid like when the profile hasn't any
-	private void cleanEmptyLikes(Profile profile) {
+	private void cleanEmptyLikes(ProfileDTO profile) {
 		boolean hasNullCandidates = profile.getLikes().stream().anyMatch(c -> c.getTarget() == null);
 		if (hasNullCandidates) {
 			profile.setLikes(new ArrayList<>());
@@ -102,10 +103,10 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	}
 
 	@Override
-	public Profile addProfile(Profile profile) {
+	public ProfileDTO addProfile(ProfileDTO profile) {
 		final String insertProfile = "INSERT INTO tinder_user (id, email, nickname, gender, attraction, passion) VALUES (?, ?, ?, ?, ?, ?)";
 		jdbcTemplate.update(insertProfile, profile.getId(), profile.getEmail(), profile.getNickname(), profile.getGender().toString(),
-				profile.getAtraction().toString(), profile.getPassion().toString());
+				profile.getAttraction().toString(), profile.getPassion().toString());
 
 		return this.getProfile(profile.getId());
 	}
@@ -132,7 +133,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public void updateLikeToMatch(String id, String id1) {
-		final String updateProposal = "UPDATE proposal SET matched = true, match_date = ? where origin = ? AND target = ?";
-		jdbcTemplate.update(updateProposal, Date.valueOf(LocalDate.now()), id, id1);
+		final String updateLike = "UPDATE tinder_like SET matched = true, match_date = ? where origin = ? AND target = ?";
+		jdbcTemplate.update(updateLike, Date.valueOf(LocalDate.now()), id, id1);
 	}
 }
