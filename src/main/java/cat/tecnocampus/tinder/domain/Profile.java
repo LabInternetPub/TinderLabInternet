@@ -97,7 +97,7 @@ public class Profile {
 	// 1.- Create like
 	// 2.- Set like to match if it does
 	public Like createAndMatchLike(Profile target) {
-		Like like = new Like(target.getId());
+		Like like = new Like(target);
 		if (target.likes(this)) {
 			like.setMatched(true);  	//origin set to match
 			target.setMatch(this);		//target set to match

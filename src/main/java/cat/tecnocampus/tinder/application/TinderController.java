@@ -25,11 +25,11 @@ public class TinderController {
 		return profileDAO.getProfilesLazy();
 	}
 
-	public ProfileDTO getFullProfile(String id) {
+	public ProfileDTO getProfileEager(String id) {
 		return profileDAO.getProfile(id);
 	}
 
-	public List<ProfileDTO> getFullProfiles() {
+	public List<ProfileDTO> getProfilesEager() {
 		return profileDAO.getProfiles();
 	}
 
@@ -69,7 +69,7 @@ public class TinderController {
 		profileDAO.saveLikes(originId, likes);
 
 		//target matched likes
-		likes.stream().filter(l -> l.isMatched()).forEach(l -> profileDAO.updateLikeToMatch(l.getTarget(), originId));
+		likes.stream().filter(l -> l.isMatched()).forEach(l -> profileDAO.updateLikeToMatch(l.getTarget().getId(), originId));
 	}
 
 	private Profile profileDTOtoProfile(ProfileDTO profileDTO) {

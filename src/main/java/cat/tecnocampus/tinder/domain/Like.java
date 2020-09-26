@@ -3,7 +3,7 @@ package cat.tecnocampus.tinder.domain;
 import java.time.LocalDate;
 
 public class Like {
-    private String target;
+    private Profile target;
     private boolean matched;
     private LocalDate creationDate;
     private LocalDate matchDate;
@@ -11,18 +11,18 @@ public class Like {
     public Like() {
     }
 
-    public Like(String target) {
+    public Like(Profile target) {
         this.target = target;
         creationDate = LocalDate.now();
         matched = false;
         matchDate = null;
     }
 
-    public String getTarget() {
+    public Profile getTarget() {
         return target;
     }
 
-    public void setTarget(String target) {
+    public void setTarget(Profile target) {
         this.target = target;
     }
 

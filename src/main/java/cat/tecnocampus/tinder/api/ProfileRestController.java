@@ -3,8 +3,6 @@ package cat.tecnocampus.tinder.api;
 import cat.tecnocampus.tinder.api.frontendException.IncorrectRESTParameter;
 import cat.tecnocampus.tinder.application.TinderController;
 import cat.tecnocampus.tinder.application.dto.ProfileDTO;
-import cat.tecnocampus.tinder.domain.Profile;
-import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +25,7 @@ public class ProfileRestController {
 			user = tinderController.getProfileLazy(id);
 		else {
 			if (mode.equalsIgnoreCase("eager"))
-				user = tinderController.getFullProfile(id);
+				user = tinderController.getProfileEager(id);
 			else throw new IncorrectRESTParameter("mode", mode);
 		}
 		return user;
@@ -39,7 +37,7 @@ public class ProfileRestController {
 			return tinderController.getProfilesLazy();
 		else {
 			if (mode.equalsIgnoreCase("eager"))
-				return tinderController.getFullProfiles();
+				return tinderController.getProfilesEager();
 			else throw new IncorrectRESTParameter("mode", mode);
 		}
 	}
