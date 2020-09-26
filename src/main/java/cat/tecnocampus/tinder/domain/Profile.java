@@ -84,16 +84,16 @@ public class Profile {
 	}
 
 	public boolean likes(Profile target) {
-		return this.getLikes().stream().anyMatch(l -> l.getTarget().equals(target.getId()));
+		return this.getLikes().stream().anyMatch(l -> l.getTarget().getId().equals(target.getId()));
 	}
 
 	public void setMatch(Profile target) {
-		Optional<Like> like = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getId())).findFirst();
+		Optional<Like> like = this.getLikes().stream().filter(l -> l.getTarget().getId().equals(target.getId())).findFirst();
 		if (like.isPresent())
 			like.get().setMatched(true);
 	}
 
-	//Targte must be compatible
+	//Target must be compatible
 	// 1.- Create like
 	// 2.- Set like to match if it does
 	public Like createAndMatchLike(Profile target) {

@@ -73,12 +73,17 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	@Override
 	public ProfileDTO getProfile(String id) {
 		final String queryProfile = "select u.id as id, u.email as email, u.nickname as nickname, u.gender as gender, u.attraction as attraction, u.passion as passion, " +
-				"p.target as likes_target, p.creation_date as likes_creationDate, p.matched as likes_matched, p.match_date as likes_matchDate from tinder_user u left join tinder_like p on u.id = p.origin where u.id = ?";
-		ProfileDTO result;
+				"l.creation_date as likes_creationDate, l.matched as likes_matched, l.match_date as likes_matchDate, " +
+				"tu.id as likes_target_id, tu.email as likes_target_email, tu.nickname as likes_target_nickname, tu.gender as likes_target_gender, tu.attraction as likes_target_attraction, tu.passion as likes_target_passion " +
+				"from tinder_user u " +
+				"left join tinder_like l on u.id = l.origin " +
+				"left join tinder_user tu on l.origin = u.id and l.target = tu.id " +
+				"where u.id = ?";
+		List<ProfileDTO> result;
 		try {
-			result = jdbcTemplate.queryForObject(queryProfile, new Object[]{id}, profileRowMapper);
-			cleanEmptyLikes(result);
-			return result;
+			result = jdbcTemplate.query(queryProfile, profilesRowMapper, id);
+			cleanEmptyLikes(result.get(0));
+			return result.get(0);
 		} catch (EmptyResultDataAccessException e) {
 			throw new ProfileNotFound(id);
 		}
@@ -101,7 +106,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	//Avoid list of candidates with an invalid like when the profile hasn't any
 	private void cleanEmptyLikes(ProfileDTO profile) {
-		boolean hasNullCandidates = profile.getLikes().stream().anyMatch(c -> c.getTarget() == null);
+		boolean hasNullCandidates = profile.getLikes().stream().anyMatch(c -> c.getTarget().getId() == null);
 		if (hasNullCandidates) {
 			profile.setLikes(new ArrayList<>());
 		}
