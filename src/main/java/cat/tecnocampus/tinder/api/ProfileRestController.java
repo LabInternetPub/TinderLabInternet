@@ -54,9 +54,8 @@ public class ProfileRestController {
 	}
 
 	@PostMapping("/likes")
-	public String addLikes(@RequestBody Like likes) {
-		int created = tinderController.newLikes(likes.getOrigin(), likes.getTargets());
-		return created + " likes created";
+	public void addLikes(@RequestBody Like likes) {
+		tinderController.newLikes(likes.getOrigin(), likes.getTargets());
 	}
 
 
