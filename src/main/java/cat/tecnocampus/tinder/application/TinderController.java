@@ -1,5 +1,6 @@
 package cat.tecnocampus.tinder.application;
 
+import cat.tecnocampus.tinder.application.dto.LikeDTO;
 import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import cat.tecnocampus.tinder.domain.Profile;
 import cat.tecnocampus.tinder.domain.Like;
@@ -49,18 +50,17 @@ public class TinderController {
 	}
 
 	public int newLikes(String originId, List<String> targetId) {
-		ProfileDTO originDTO = profileDAO.getProfile(originId); //check it exists in BBDD
+		ProfileDTO originDTO = profileDAO.getProfile(originId); //check it exists in DDBB
 		Profile origin = profileDTOtoProfile(originDTO);
 
 		List<Like> likes =
-		targetId.stream().map(profileDAO::getProfile) 	//check it exists in BBDD
+		targetId.stream().map(profileDAO::getProfile) 	//check it exists in DDBB
 				.map(this::profileDTOtoProfile)			//convert to domain profile
 				.filter(origin::isCompatible) 			//make sure it is compatible
 				.map(origin::createAndMatchLike)		//create likes
 				.collect(Collectors.toList());
 
 		updateLikesPersistence(likes, originId);
-
 		return likes.size();
 	}
 
@@ -80,7 +80,7 @@ public class TinderController {
 		result.setNickname(profileDTO.getNickname());
 		result.setAttraction(profileDTO.getAttraction());
 		result.setGender(profileDTO.getGender());
-		result.setLikes(profileDTO.getLikes());
+		result.setLikes(profileDTO.getLikes().stream().map(this::LikeDTOtoLike).collect(Collectors.toList()));
 
 		return result;
 	}
@@ -92,8 +92,28 @@ public class TinderController {
 		result.setNickname(profile.getNickname());
 		result.setAttraction(profile.getAttraction());
 		result.setGender(profile.getGender());
-		result.setLikes(profile.getLikes());
+		result.setLikes(profile.getLikes().stream().map(this::LikeToLikeDTO).collect(Collectors.toList()));
 
 		return result;
+	}
+
+	private Like LikeDTOtoLike(LikeDTO likeDTO) {
+		Like like = new Like();
+		like.setTarget(profileDTOtoProfile(likeDTO.getTarget()));
+		like.setCreationDate(likeDTO.getCreationDate());
+		like.setMatchDate(likeDTO.getMatchDate());
+		like.setMatched(likeDTO.isMatched());
+
+		return like;
+	}
+
+	private LikeDTO LikeToLikeDTO(Like like) {
+		LikeDTO likeDTO = new LikeDTO();
+		likeDTO.setTarget(profileToProfileDTO(like.getTarget()));
+		likeDTO.setCreationDate(like.getCreationDate());
+		likeDTO.setMatchDate(like.getMatchDate());
+		likeDTO.setMatched(like.isMatched());
+
+		return likeDTO;
 	}
 }

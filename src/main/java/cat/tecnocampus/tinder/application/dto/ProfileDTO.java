@@ -25,7 +25,7 @@ public class ProfileDTO {
     private Profile.Gender attraction;
     private Profile.Passion passion;
 
-    private List<Like> likes = new ArrayList<>();
+    private List<LikeDTO> likes = new ArrayList<>();
 
     public ProfileDTO() {
     }
@@ -78,11 +78,11 @@ public class ProfileDTO {
         this.passion = passion;
     }
 
-    public List<Like> getLikes() {
+    public List<LikeDTO> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Like> likes) {
+    public void setLikes(List<LikeDTO> likes) {
         this.likes = likes;
     }
 }
