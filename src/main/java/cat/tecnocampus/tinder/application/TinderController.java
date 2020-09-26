@@ -55,26 +55,21 @@ public class TinderController {
 		List<Like> likes =
 		targetId.stream().map(profileDAO::getProfile) 	//check it exists in BBDD
 				.map(this::profileDTOtoProfile)			//convert to domain profile
-				.filter(origin::isCompatible) 				 //make sure it is compatible
-				.map(t -> createAndMatchProposal(origin, t)).collect(Collectors.toList());
+				.filter(origin::isCompatible) 			//make sure it is compatible
+				.map(origin::createAndMatchLike)		//create likes
+				.collect(Collectors.toList());
 
-		origin.addLikes(likes);
-		profileDAO.saveLikes(origin.getId(), likes);
-		return targetId.size();
+		updateLikesPersistence(likes, originId);
+
+		return likes.size();
 	}
 
-	//Should this function be separated in three smaller ones? such as
-	// 1.- Create proposal
-	// 2.- Set proposal to match if it does
-	// 3.- Update the target like to match in the DDBB
-	private Like createAndMatchProposal(Profile origin, Profile target) {
-		Like like = new Like(target.getId());
-		if (target.likes(origin)) {
-			like.setMatched(true);  	//origin set to match
-			target.setMatch(origin);		//target set to match
-			profileDAO.updateLikeToMatch(target.getId(), origin.getId());
-		}
-		return like;
+	private void updateLikesPersistence(List<Like> likes, String originId) {
+		//origin likes
+		profileDAO.saveLikes(originId, likes);
+
+		//target matched likes
+		likes.stream().filter(l -> l.isMatched()).forEach(l -> profileDAO.updateLikeToMatch(l.getTarget(), originId));
 	}
 
 	private Profile profileDTOtoProfile(ProfileDTO profileDTO) {

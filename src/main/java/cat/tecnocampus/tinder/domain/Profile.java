@@ -77,10 +77,6 @@ public class Profile {
 		this.likes = likes;
 	}
 
-	public void addLikes(List<Like> likes) {
-		this.likes.addAll(likes);
-	}
-
 	public boolean isCompatible(Profile user) {
 		if (user.getId().equals(this.id)) //to avoid narcicists
 			return false;
@@ -95,6 +91,19 @@ public class Profile {
 		Optional<Like> like = this.getLikes().stream().filter(l -> l.getTarget().equals(target.getId())).findFirst();
 		if (like.isPresent())
 			like.get().setMatched(true);
+	}
+
+	//Targte must be compatible
+	// 1.- Create like
+	// 2.- Set like to match if it does
+	public Like createAndMatchLike(Profile target) {
+		Like like = new Like(target.getId());
+		if (target.likes(this)) {
+			like.setMatched(true);  	//origin set to match
+			target.setMatch(this);		//target set to match
+		}
+		this.likes.add(like);
+		return like;
 	}
 
 
