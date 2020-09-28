@@ -43,9 +43,9 @@ public class ProfileRestController {
 	}
 
 	//Returns profiles that match the user (id) preferences
-	@GetMapping("/{email}/candidates")
-	public List<ProfileDTO> getCandidates(@PathVariable String email) {
-		return tinderController.getCandidates(email);
+	@GetMapping("/{id}/candidates")
+	public List<ProfileDTO> getCandidates(@PathVariable String id) {
+		return tinderController.getCandidates(id);
 	}
 
 	@PostMapping("/profiles")

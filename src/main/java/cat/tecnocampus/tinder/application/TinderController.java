@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service //same as @Component
 public class TinderController {
 	private ProfileDAO profileDAO;
 
