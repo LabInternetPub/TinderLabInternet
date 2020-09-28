@@ -32,6 +32,7 @@ public class Like {
 
     public void setMatched(boolean matched) {
         this.matched = matched;
+        this.matchDate = LocalDate.now();
     }
 
     public LocalDate getCreationDate() {
