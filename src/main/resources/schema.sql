@@ -19,5 +19,7 @@ CREATE TABLE tinder_like
   creation_date DATE,
   match_date DATE DEFAULT NULL,
   matched TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (origin, target)
+  PRIMARY KEY (origin, target),
+  FOREIGN KEY (origin) REFERENCES tinder_user(id),
+  FOREIGN KEY (target) REFERENCES tinder_user(id)
 );

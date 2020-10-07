@@ -89,8 +89,7 @@ public class Profile {
 
 	public void setMatch(Profile target) {
 		Optional<Like> like = this.getLikes().stream().filter(l -> l.getTarget().getId().equals(target.getId())).findFirst();
-		if (like.isPresent())
-			like.get().setMatched(true);
+		like.ifPresent(value -> value.setMatched(true));
 	}
 
 	//Target must be compatible

@@ -1,6 +1,6 @@
 package cat.tecnocampus.tinder.api.frontendException;
 
-import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
+import cat.tecnocampus.tinder.application.exception.ProfileNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ExceptionHandlingAdvice {
 
     @ResponseBody
-    @ExceptionHandler(ProfileNotFound.class)
+    @ExceptionHandler(ProfileNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String objectNotFoundHandler(Exception ex) {
         return ex.getMessage();

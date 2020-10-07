@@ -1,7 +1,7 @@
 package cat.tecnocampus.tinder.persistence;
 
 import cat.tecnocampus.tinder.application.dto.ProfileDTO;
-import cat.tecnocampus.tinder.application.exception.ProfileNotFound;
+import cat.tecnocampus.tinder.application.exception.ProfileNotFoundException;
 import cat.tecnocampus.tinder.domain.Profile;
 import cat.tecnocampus.tinder.domain.Like;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -58,9 +59,9 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	public ProfileDTO getProfileLazy(String id) {
 		final String queryProfileLazy = "select id, email, nickname, gender, attraction, passion from tinder_user where id = ?";
 		try {
-			return jdbcTemplate.queryForObject(queryProfileLazy, new Object[]{id}, profileRowMapperLazy);
+			return jdbcTemplate.queryForObject(queryProfileLazy, profileRowMapperLazy);
 		} catch (EmptyResultDataAccessException e) {
-			throw new ProfileNotFound(id);
+			throw new ProfileNotFoundException(id);
 		}
 	}
 
@@ -85,7 +86,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 			cleanEmptyLikes(result.get(0));
 			return result.get(0);
 		} catch (EmptyResultDataAccessException e) {
-			throw new ProfileNotFound(id);
+			throw new ProfileNotFoundException(id);
 		}
 	}
 
@@ -98,15 +99,14 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 				"left join tinder_like l on u.id = l.origin " +
 				"left join tinder_user tu on l.origin = u.id and l.target = tu.id;";
 
-		List<ProfileDTO> result;
-		result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
+		List<ProfileDTO> result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
 		result.stream().forEach(this::cleanEmptyLikes);
 		return result;
 	}
 
 	//Avoid list of candidates with an invalid like when the profile hasn't any
 	private void cleanEmptyLikes(ProfileDTO profile) {
-		boolean hasNullCandidates = profile.getLikes().stream().anyMatch(c -> c.getTarget().getId() == null);
+		boolean hasNullCandidates = profile.getLikes().stream().anyMatch(l -> l.getCreationDate() == null);
 		if (hasNullCandidates) {
 			profile.setLikes(new ArrayList<>());
 		}

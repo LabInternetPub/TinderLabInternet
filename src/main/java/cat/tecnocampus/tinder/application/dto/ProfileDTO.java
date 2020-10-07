@@ -1,6 +1,5 @@
 package cat.tecnocampus.tinder.application.dto;
 
-import cat.tecnocampus.tinder.domain.Like;
 import cat.tecnocampus.tinder.domain.Profile;
 
 import javax.validation.constraints.NotBlank;
