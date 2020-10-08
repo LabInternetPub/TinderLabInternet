@@ -69,7 +69,7 @@ public class TinderController {
 		profileDAO.saveLikes(originId, likes);
 
 		//target matched likes
-		likes.stream().filter(l -> l.isMatched()).forEach(l -> profileDAO.updateLikeToMatch(l.getTarget().getId(), originId));
+		likes.stream().filter(l -> l.isMatched()).forEach(l -> profileDAO.updateLikeToMatch(l.getTarget().getId(), originId, l.getMatchDate()));
 	}
 
 	private Profile profileDTOtoProfile(ProfileDTO profileDTO) {

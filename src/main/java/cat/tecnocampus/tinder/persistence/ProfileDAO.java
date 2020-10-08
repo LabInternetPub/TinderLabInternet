@@ -123,7 +123,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 
 	@Override
 	public void saveLikes(String origin, List<Like> likes) {
-		final String insertLike = "INSERT INTO tinder_like (origin, target, matched, creation_date) VALUES (?, ?, ?, ?)";
+		final String insertLike = "INSERT INTO tinder_like (origin, target, matched, creation_date, match_date) VALUES (?, ?, ?, ?, ?)";
 		jdbcTemplate.batchUpdate(insertLike, new BatchPreparedStatementSetter() {
 			@Override
 			public void setValues(PreparedStatement preparedStatement, int i) throws SQLException {
@@ -132,6 +132,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 				preparedStatement.setString(2, like.getTarget().getId());
 				preparedStatement.setBoolean(3, like.isMatched());
 				preparedStatement.setDate(4, Date.valueOf(like.getCreationDate()));
+				preparedStatement.setDate(5, like.getMatchDate()==null? null : Date.valueOf(like.getMatchDate()));
 			}
 
 			@Override
@@ -142,8 +143,8 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 	}
 
 	@Override
-	public void updateLikeToMatch(String id, String id1) {
-		final String updateLike = "UPDATE tinder_like SET matched = true, match_date = ? where origin = ? AND target = ?";
-		jdbcTemplate.update(updateLike, Date.valueOf(LocalDate.now()), id, id1);
+	public void updateLikeToMatch(String id, String id1, LocalDate matchDate) {
+		final String updateLike = "UPDATE tinder_like SET matched = 1, match_date = ? where origin = ? AND target = ?";
+		jdbcTemplate.update(updateLike, Date.valueOf(matchDate), id, id1);
 	}
 }

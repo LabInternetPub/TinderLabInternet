@@ -4,6 +4,7 @@ import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import cat.tecnocampus.tinder.domain.Profile;
 import cat.tecnocampus.tinder.domain.Like;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ProfileDAO {
@@ -18,5 +19,5 @@ public interface ProfileDAO {
 
     void saveLikes(String origin, List<Like> likes);
 
-    void updateLikeToMatch(String id, String id1);
+    void updateLikeToMatch(String id, String id1, LocalDate matchDate);
 }
