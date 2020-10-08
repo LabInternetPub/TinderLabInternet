@@ -97,7 +97,7 @@ public class ProfileDAO implements cat.tecnocampus.tinder.application.ProfileDAO
 				"tu.id as likes_target_id, tu.email as likes_target_email, tu.nickname as likes_target_nickname, tu.gender as likes_target_gender, tu.attraction as likes_target_attraction, tu.passion as likes_target_passion " +
 				"from tinder_user u " +
 				"left join tinder_like l on u.id = l.origin " +
-				"left join tinder_user tu on l.origin = u.id and l.target = tu.id;";
+				"left join tinder_user tu on l.origin = u.id and l.target = tu.id";
 
 		List<ProfileDTO> result = jdbcTemplate.query(queryProfiles, profilesRowMapper);
 		result.stream().forEach(this::cleanEmptyLikes);
