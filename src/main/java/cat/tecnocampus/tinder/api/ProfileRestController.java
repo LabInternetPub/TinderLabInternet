@@ -3,7 +3,6 @@ package cat.tecnocampus.tinder.api;
 import cat.tecnocampus.tinder.api.frontendException.IncorrectRESTParameter;
 import cat.tecnocampus.tinder.application.TinderController;
 import cat.tecnocampus.tinder.application.dto.ProfileDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
