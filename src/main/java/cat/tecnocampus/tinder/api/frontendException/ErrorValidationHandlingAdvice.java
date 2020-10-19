@@ -62,5 +62,13 @@ public class ErrorValidationHandlingAdvice {
             this.fieldName = fieldName;
             this.message = message;
         }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 }

@@ -1,7 +1,8 @@
 package cat.tecnocampus.tinder.application;
 
-import cat.tecnocampus.tinder.application.dto.quote.QuoteCTO;
-import cat.tecnocampus.tinder.application.dto.quote.ValueCTO;
+import cat.tecnocampus.tinder.application.dto.quote.QuoteDTO;
+import cat.tecnocampus.tinder.application.dto.quote.ValueDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,18 +19,18 @@ public class QuoteController {
         this.restTemplate = restTemplate;
     }
 
-    public ValueCTO getSingleQuote(Long id) {
-        var quote = restTemplate.getForObject(url + "/{id}", QuoteCTO.class, Long.toString(id));
+    public ValueDTO getSingleQuote(Long id) {
+        var quote = restTemplate.getForObject(url + "/{id}", QuoteDTO.class, Long.toString(id));
         return quote.getValue();
     }
 
-    public ValueCTO getRandomQuote() {
-        var quote = restTemplate.getForEntity(url + "/random", QuoteCTO.class);
+    public ValueDTO getRandomQuote() {
+        var quote = restTemplate.getForEntity(url + "/random", QuoteDTO.class);
         return quote.getBody().getValue();
     }
 
-    public List<ValueCTO> getQuotes() {
-        var quotes = restTemplate.getForEntity(url, QuoteCTO[].class);
-        return Arrays.asList(quotes.getBody()).stream().map(QuoteCTO::getValue).collect(Collectors.toList());
+    public List<ValueDTO> getQuotes() {
+        var quotes = restTemplate.getForEntity(url, QuoteDTO[].class);
+        return Arrays.asList(quotes.getBody()).stream().map(QuoteDTO::getValue).collect(Collectors.toList());
     }
 }

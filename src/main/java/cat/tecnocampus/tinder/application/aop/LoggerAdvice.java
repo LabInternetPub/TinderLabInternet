@@ -53,14 +53,12 @@ public class LoggerAdvice {
     public List<ProfileDTO> dealRequestParam(ProceedingJoinPoint jp) {
 
         try {
-            logger.info("Before showing notes");
-            //note that showUserRequestParameter is proxied and it must return a string
-            // representing the thymeleaf file name
-            List<ProfileDTO> res = (List<ProfileDTO>) jp.proceed();
             logger.info("Going to list all profiles in an eager fashion");
+             List<ProfileDTO> res = (List<ProfileDTO>) jp.proceed();
+            logger.info("Already listed all profiles in an eager fashion");
             return res;
         } catch (Throwable throwable) {
-            logger.info("Already listed all profiles in an eager fashion");
+            logger.info("Something went wrong when listing profiles in an eager fashion");
             throwable.printStackTrace();
             return new ArrayList<ProfileDTO>();
         }

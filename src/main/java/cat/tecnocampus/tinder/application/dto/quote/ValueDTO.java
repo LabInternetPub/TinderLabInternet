@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonRootName("value")
-public class ValueCTO {
+public class ValueDTO {
 
     private Long id;
     private String quote;
 
-    public ValueCTO() {
+    public ValueDTO() {
     }
 
     public Long getId() {

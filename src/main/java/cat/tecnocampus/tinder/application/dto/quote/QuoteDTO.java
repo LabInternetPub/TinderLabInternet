@@ -3,12 +3,12 @@ package cat.tecnocampus.tinder.application.dto.quote;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class QuoteCTO {
+public class QuoteDTO {
 
     private String type;
-    private ValueCTO valueCTO;
+    private ValueDTO valueDTO;
 
-    public QuoteCTO() {
+    public QuoteDTO() {
     }
 
     public String getType() {
@@ -19,19 +19,19 @@ public class QuoteCTO {
         this.type = type;
     }
 
-    public ValueCTO getValue() {
-        return valueCTO;
+    public ValueDTO getValue() {
+        return valueDTO;
     }
 
-    public void setValue(ValueCTO valueCTO) {
-        this.valueCTO = valueCTO;
+    public void setValue(ValueDTO valueDTO) {
+        this.valueDTO = valueDTO;
     }
 
     @Override
     public String toString() {
         return "Quote{" +
                 "type='" + type + '\'' +
-                ", value=" + valueCTO +
+                ", value=" + valueDTO +
                 '}';
     }
 }

@@ -2,8 +2,8 @@ package cat.tecnocampus.tinder.persistence;
 
 import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import cat.tecnocampus.tinder.application.exception.ProfileNotFoundException;
-import cat.tecnocampus.tinder.domain.Profile;
 import cat.tecnocampus.tinder.domain.Like;
+import cat.tecnocampus.tinder.domain.Profile;
 import org.simpleflatmapper.jdbc.spring.JdbcTemplateMapperFactory;
 import org.simpleflatmapper.jdbc.spring.ResultSetExtractorImpl;
 import org.simpleflatmapper.jdbc.spring.RowMapperImpl;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
