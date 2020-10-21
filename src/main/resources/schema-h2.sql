@@ -7,7 +7,7 @@ CREATE TABLE tinder_user
   gender VARCHAR (50),
   attraction VARCHAR (50),
   passion VARCHAR (100),
-  password VARCHAR(70) NOT NULL DEFAULT '123456',
+  password VARCHAR(70) NOT NULL,
   enabled TINYINT NOT NULL DEFAULT 1
 );
 
@@ -23,3 +23,13 @@ CREATE TABLE tinder_like
   FOREIGN KEY (origin) REFERENCES tinder_user(id),
   FOREIGN KEY (target) REFERENCES tinder_user(id)
 );
+
+DROP TABLE if EXISTS authorities;
+CREATE TABLE authorities (
+    authority_id int(11) NOT NULL AUTO_INCREMENT,
+    username varchar(45) NOT NULL,
+    role varchar(45) NOT NULL,
+    PRIMARY KEY (authority_id),
+    UNIQUE KEY uni_username_role (role,username),
+    CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES tinder_user (nickname));
+
