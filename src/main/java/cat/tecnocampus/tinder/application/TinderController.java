@@ -22,6 +22,10 @@ public class TinderController {
 		return profileDAO.getProfileLazy(id);
 	}
 
+	private ProfileDTO getProfileByNameLazy(String name) {
+		return profileDAO.getProfileByNameLazy(name);
+	}
+
 	public List<ProfileDTO> getProfilesLazy() {
 		return profileDAO.getProfilesLazy();
 	}
@@ -30,18 +34,31 @@ public class TinderController {
 		return profileDAO.getProfile(id);
 	}
 
+	public ProfileDTO getProfileByNameEager(String name) {
+		return profileDAO.getProfileByName(name);
+	}
+
 	public List<ProfileDTO> getProfilesEager() {
 		return profileDAO.getProfiles();
 	}
 
 	public List<ProfileDTO> getCandidates(String id) {
 		ProfileDTO userDTO = this.getProfileLazy(id);
+		return getProfileDTOS(userDTO);
+	}
+
+	private List<ProfileDTO> getProfileDTOS(ProfileDTO userDTO) {
 		Profile user = profileDTOtoProfile(userDTO);
 		return this.getProfilesLazy().stream()
 				.map(this::profileDTOtoProfile)
 				.filter(user::isCompatible)
 				.map(this::profileToProfileDTO)
 				.collect(Collectors.toList());
+	}
+
+	public List<ProfileDTO> getCandidatesByName(String name) {
+		ProfileDTO userDTO = this.getProfileByNameLazy(name);
+		return getProfileDTOS(userDTO);
 	}
 
 	public ProfileDTO addProfile(ProfileDTO profile) {

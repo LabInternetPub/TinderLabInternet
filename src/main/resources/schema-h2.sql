@@ -3,7 +3,7 @@ CREATE TABLE tinder_user
 (
   id VARCHAR (256) PRIMARY KEY ,
   email VARCHAR (100) ,
-  nickname VARCHAR (255),
+  nickname VARCHAR (255) UNIQUE,
   gender VARCHAR (50),
   attraction VARCHAR (50),
   passion VARCHAR (100),

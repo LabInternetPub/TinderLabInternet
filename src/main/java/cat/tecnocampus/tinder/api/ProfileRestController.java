@@ -6,6 +6,7 @@ import cat.tecnocampus.tinder.application.dto.ProfileDTO;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -43,10 +44,20 @@ public class ProfileRestController {
 		}
 	}
 
+	@GetMapping("profiles/me")
+	public ProfileDTO getMyProfile(Principal principal) {
+		return tinderController.getProfileByNameEager(principal.getName());
+	}
+
 	//Returns profiles that match the user (id) preferences
-	@GetMapping("/{id}/candidates")
+	@GetMapping("profiles/{id}/candidates")
 	public List<ProfileDTO> getCandidates(@PathVariable(name="id") String whatever) {
 		return tinderController.getCandidates(whatever);
+	}
+
+	@GetMapping("profiles/me/candidates")
+	public List<ProfileDTO> getMeCandidates(Principal principal) {
+		return tinderController.getCandidatesByName(principal.getName());
 	}
 
 	@PostMapping("/profiles")

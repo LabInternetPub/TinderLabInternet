@@ -20,4 +20,8 @@ public interface ProfileDAO {
     void saveLikes(String origin, List<Like> likes);
 
     void updateLikeToMatch(String id, String id1, LocalDate matchDate);
+
+    ProfileDTO getProfileByName(String name);
+
+    ProfileDTO getProfileByNameLazy(String name);
 }
