@@ -1,6 +1,7 @@
 package cat.tecnocampus.tinder.configuration.security;
 
 import cat.tecnocampus.tinder.configuration.security.jwt.JwtConfig;
+import cat.tecnocampus.tinder.configuration.security.jwt.JwtTokenVerifierFilter;
 import cat.tecnocampus.tinder.configuration.security.jwt.JwtUsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +38,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+                .addFilterAfter(new JwtTokenVerifierFilter(jwtConfig),JwtUsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
                 .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
