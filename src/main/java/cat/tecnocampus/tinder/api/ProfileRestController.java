@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class ProfileRestController {
 
@@ -69,7 +69,6 @@ public class ProfileRestController {
 	public void addLikes(@RequestBody Like likes) {
 		tinderController.newLikes(likes.getOrigin(), likes.getTargets());
 	}
-
 
 	private class Like {
 		private String origin;

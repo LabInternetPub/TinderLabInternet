@@ -7,7 +7,7 @@ CREATE TABLE tinder_user
   gender VARCHAR (50),
   attraction VARCHAR (50),
   passion VARCHAR (100),
-  password VARCHAR(70) NOT NULL,
+  password VARCHAR(70) NOT NULL DEFAULT '{bcrypt}$2a$10$fVKfcc47q6lrNbeXangjYeY000dmjdjkdBxEOilqhapuTO5ZH0co2',
   enabled TINYINT NOT NULL DEFAULT 1
 );
 

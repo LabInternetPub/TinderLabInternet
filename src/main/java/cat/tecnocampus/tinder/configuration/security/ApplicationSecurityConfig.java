@@ -34,15 +34,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernamePasswordAuthenticationFilter(authenticationManager(), jwtConfig))
                 .addFilterAfter(new JwtTokenVerifierFilter(jwtConfig),JwtUsernamePasswordAuthenticationFilter.class)
 
                 .authorizeRequests()
-                .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
+                .antMatchers("/", "index", "/css/*", "/js/*", "/profile.html", "/*.html").permitAll()
                 .antMatchers("/profiles/me/**", "/quotes/**").hasRole("USER")
-                .antMatchers("/profiles/**").hasRole("ADMIN")
+                .antMatchers("/profiles/**").permitAll()//.hasRole("ADMIN")
                 .anyRequest()
                 .authenticated();
     }

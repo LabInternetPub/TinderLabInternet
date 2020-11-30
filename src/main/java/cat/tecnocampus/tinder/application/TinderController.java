@@ -19,6 +19,7 @@ public class TinderController {
 	}
 
 	public ProfileDTO getProfileLazy(String id) {
+		System.out.println("profile lazyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 		return profileDAO.getProfileLazy(id);
 	}
 
